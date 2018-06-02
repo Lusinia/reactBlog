@@ -2,19 +2,11 @@ import * as types from './actionTypes';
 
 
 /* Action Creator */
+export const fetchData = payload => ({
+  type: types.FETCH_DATA,
+  payload
+});
 
-export const fetchDataSuccess = (root) => {
-  return {
-    type: types.ROOT_CHANGED,
-    root: root
-  };
-};
-
-export const fetchData = () => {
-  return (dispatch) => {
-    dispatch(fetchDataSuccess('aaaaa'));
-  };
-};
 /* Dispatch the actionCreator */
 
 export const setData = data => dispatch => {

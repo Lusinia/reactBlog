@@ -1,1 +1,1 @@
-export const FETCH_DATA = 'blog.FETCH_DATA';
+export const ROOT_CHANGED = 'blog.ROOT_CHANGED';

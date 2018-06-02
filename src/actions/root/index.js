@@ -5,11 +5,10 @@ import * as types from './actionTypes';
 
 export const changeAppRoot = (root) => {
   return {
-    type: types.FETCH_DATA,
+    type: types.ROOT_CHANGED,
     root: root
   };
 };
-
 
 /* Dispatch the actionCreator */
 

@@ -1,0 +1,1 @@
+export const ROOT_CHANGED = 'blog.ROOT_CHANGED';

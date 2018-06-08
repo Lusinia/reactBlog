@@ -7,6 +7,8 @@ import registerScreens from '.';
 
 import reducers from './reducers';
 
+console.disableYellowBox = true;
+
 export const store = createStore(reducers, applyMiddleware(thunk));
 
 registerScreens(store, Provider);
@@ -22,6 +24,28 @@ export default class App extends Component {
         navigatorStyle: {},
         navigatorButtons: {}
       },
+        drawer: {
+          left: {
+            screen: 'blog.SideMenu',
+            passProps: {},
+            disableOpenGesture: true,
+            fixedWidth: '50%'
+          },
+          right: {
+            screen: 'blog.Settings',
+            passProps: {},
+            disableOpenGesture: true,
+            fixedWidth: '50%'
+          },
+          style: {
+            drawerShadow: true,
+            contentOverlayColor: 'rgba(0,0,0,0.25)',
+            leftDrawerWidth: 50,
+            rightDrawerWidth: 50
+          },
+          type: 'MMDrawer',
+          animationType: 'door',
+        },
         appStyle: {
           orientation: 'portrait',
         },

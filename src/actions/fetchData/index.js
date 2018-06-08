@@ -1,4 +1,6 @@
 import * as types from './actionTypes';
+import Axios from 'axios';
+import { BASE_URL } from '../../constants';
 
 
 /* Action Creator */
@@ -7,8 +9,17 @@ export const fetchData = payload => ({
   payload
 });
 
+export const fetchDataRequest = () => (dispatch) => {
+  return Axios.get(`${BASE_URL}/Data.json`)
+    .then(res => {
+      dispatch(fetchData(res.data));
+    }, err => {
+
+    });
+};
+
 /* Dispatch the actionCreator */
 
-export const setData = data => dispatch => {
-  dispatch(fetchData(data));
+export const setData = () => dispatch => {
+  dispatch(fetchDataRequest());
 };

@@ -1,22 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import ImageLoad from 'react-native-image-placeholder';
 import Likes from './Likes';
 import Date from './Date';
 import Comments from './Comments';
-import { TITLE_MIXIN } from '../constants';
-
+import { LOADING, TITLE_MIXIN, WINDOW_WIDTH } from '../constants';
+import { CachedImage } from 'react-native-cached-image';
 
 const PhotoPost = (props) => {
   return (
     <View>
       <Text style={styles.title}>{props.userName}</Text>
       <View style={styles.imageWrapper}>
-        <ImageLoad
-          style={styles.image}
-          loadingStyle={{ size: 'small', color: 'white' }}
-          source={{ uri:  props.image }}
+        <CachedImage
+          source={{ uri: props.image }}
+          defaultSource={LOADING}
+          fallbackSource={LOADING}
+          style={{
+            width: WINDOW_WIDTH * .98,
+            height: WINDOW_WIDTH * .98
+          }}
         />
       </View>
       <View style={styles.bottomWrapper}>
@@ -32,14 +35,15 @@ const styles = StyleSheet.create({
   imageWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%'
+    width: WINDOW_WIDTH * .98,
+    height: WINDOW_WIDTH * .98
   },
   title: {
     ...TITLE_MIXIN
   },
   image: {
-    width: 200,
-    height: 200,
+    width: '100%',
+    height: '100%'
   },
   post: {
     width: '100%',

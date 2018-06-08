@@ -3,17 +3,13 @@ import * as types from './actionTypes';
 
 /* Action Creator */
 
-export const changeAppRoot = (root) => {
-  return {
-    type: types.ROOT_CHANGED,
-    root: root
-  };
-};
+export const changedTab = (payload) => ({
+  type: types.ROOT_CHANGED,
+  payload
+});
 
 /* Dispatch the actionCreator */
 
-export const appInitialized = () => {
-  return async function (dispatch, getState) {
-    dispatch(changeAppRoot('ShowList'));
-  };
+export const selectTab = (data) => dispatch => {
+    dispatch(changedTab(data));
 };

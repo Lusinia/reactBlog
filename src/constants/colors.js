@@ -4,4 +4,6 @@ export const COLORS = {
   CURIOUS_BLUE: '#217DDE',
   BRIGHT_GRAY: '#39424C',
   FIORD: '#4C5B6B',
+  DARK_TRANSPARENT: 'rgba(0,0,0,.2)',
+  CHALICE: 'rgba(163, 163, 163 ,.5)',
 };

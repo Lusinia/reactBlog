@@ -1,13 +1,16 @@
 import Immutable from 'seamless-immutable';
-import * as types from "../actions/fetchData/actionTypes";
+import * as types from "../actions/cache/actionTypes";
 
 const initialState = Immutable({
-  data: [],
+  data: {
+    size: 0,
+    files: 0
+  },
 });
 
-export default function(state = initialState, action = {}) {
+export default function CacheReducer(state = initialState, action = {}) {
   switch (action.type) {
-    case types.FETCH_DATA:
+    case types.CACHE_DATA:
       return state.merge({
         data: action.payload
       });

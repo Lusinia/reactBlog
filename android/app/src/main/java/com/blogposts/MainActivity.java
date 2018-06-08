@@ -7,4 +7,8 @@ public class MainActivity extends SplashActivity {
   //  public String getMainComponentName() {
      //   return "BlogPosts";
     //}
+      //@Override
+    //  public View createSplashLayout() {
+    //    return new View(this);   // <====== TO AVOID WHITE BACKGROUND
+    //  }
 }

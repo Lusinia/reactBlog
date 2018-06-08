@@ -57,8 +57,7 @@ class Settings extends Component {
           sections={[
             { data: [{ title: 'Cached size', value: formatBytes(this.props.cacheData.size) }] },
             { data: [{ title: 'Cached files', value: `${this.props.cacheData.files.length || 0}` }] },
-            { data: [{ title: 'Clean cache', onPressButton: this.cleanCache }] },
-            { data: [{ title: 'Get info', onPressButton: this.getCacheInfo }] },
+            { data: [{ title: 'Clean cache', onPressButton: this.cleanCache }] }
           ]}
         />
       </View>

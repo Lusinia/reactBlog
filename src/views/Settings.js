@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SectionList, StyleSheet, View, Alert } from 'react-native';
+import { Alert, SectionList, StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { COLORS } from '../constants/colors';
 import { defaultImageCacheManager, PADDING_MIXIN, TEXT_SIZE } from '../constants';
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import ListItemSettings from '../components/ListView';
 import { setCacheData } from '../actions/cache';
 import { formatBytes } from '../helpers';
+import { setError } from '../actions/root';
 
 
 class Settings extends Component {
@@ -17,10 +18,14 @@ class Settings extends Component {
       cachedFiles: 0
     };
     this.cleanCache = this.cleanCache.bind(this);
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+
   }
 
-  async componentDidMount() {
-    await this.getCacheInfo();
+  onNavigatorEvent(event) {
+    if (event.id === 'willAppear') {
+      this.getCacheInfo();
+    }
   }
 
   cleanCache() {
@@ -30,6 +35,7 @@ class Settings extends Component {
           .then(() => {
             this.getCacheInfo();
           }).catch(() => {
+          this.props.setError('You cannot clean the cache.');
           Alert.alert(
             'You cannot clean the cache.',
             'Wait for the images to finish loading.'
@@ -38,10 +44,12 @@ class Settings extends Component {
       });
   }
 
+
   getCacheInfo() {
     defaultImageCacheManager.getCacheInfo().then(({ size, files }) => {
       this.props.setCacheData({ size, files });
     }).catch(() => {
+      this.props.setError('You cannot get the size of the cache');
       Alert.alert(
         'You cannot get the size of the cache.',
         'Wait for the images to finish loading.'
@@ -71,6 +79,7 @@ class Settings extends Component {
 Settings.propTypes = {
   navigator: PropTypes.object,
   setCacheData: PropTypes.func,
+  setError: PropTypes.func,
   cacheData: PropTypes.object,
 };
 
@@ -98,5 +107,5 @@ const mapStateToProps = (state) => ({
   cacheData: state.cacheData.data
 });
 
-export default connect(mapStateToProps, { setCacheData })(Settings);
+export default connect(mapStateToProps, { setCacheData, setError })(Settings);
 

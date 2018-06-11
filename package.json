@@ -3,19 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "concurrently \"yarn server\" \"yarn android\"",
+    "start": "yarn android",
     "test": "jest",
     "link": "node node_modules/react-native/local-cli/cli.js link",
     "lint": "./node_modules/.bin/eslint src --fix",
     "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
     "build:ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/BlogPosts/main.jsbundle' --dev=true --platform='ios' --assets-dest='./ios'",
-    "build:android": "chmod +x ./bin/run.sh && ./bin/run.sh",
-    "server": "http-server -p 8000  ./public --cors"
+    "build:android": "chmod +x ./bin/run.sh && ./bin/run.sh"
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "concurrently": "^3.5.1",
     "cors": "^2.8.4",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
@@ -41,7 +39,6 @@
     "babel-eslint": "^8.2.3",
     "babel-jest": "23.0.1",
     "babel-preset-react-native": "4.0.0",
-    "http-server": "^0.11.1",
     "jest": "23.1.0",
     "react-test-renderer": "16.3.1"
   },

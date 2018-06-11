@@ -6,4 +6,6 @@ export const COLORS = {
   FIORD: '#4C5B6B',
   DARK_TRANSPARENT: 'rgba(0,0,0,.2)',
   CHALICE: 'rgba(163, 163, 163 ,.5)',
+  BLACK: '#000000',
+  GOLDEN:'#E48911'
 };

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SectionList, StyleSheet, View } from 'react-native';
+import { SectionList, StyleSheet, View, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import { COLORS } from '../constants/colors';
 import { defaultImageCacheManager, PADDING_MIXIN, TEXT_SIZE } from '../constants';
@@ -21,7 +21,6 @@ class Settings extends Component {
 
   async componentDidMount() {
     await this.getCacheInfo();
-
   }
 
   cleanCache() {
@@ -29,20 +28,24 @@ class Settings extends Component {
       .then(() => {
         defaultImageCacheManager.clearCache()
           .then(() => {
-            defaultImageCacheManager.getCacheInfo()
-              .then(({ size, files }) => {
-                this.props.setCacheData({
-                  size,
-                  files: files.length
-                });
-              });
-          });
+            this.getCacheInfo();
+          }).catch(() => {
+          Alert.alert(
+            'You cannot clean the cache.',
+            'Wait for the images to finish loading.'
+          );
+        });
       });
   }
 
   getCacheInfo() {
     defaultImageCacheManager.getCacheInfo().then(({ size, files }) => {
       this.props.setCacheData({ size, files });
+    }).catch(() => {
+      Alert.alert(
+        'You cannot get the size of the cache.',
+        'Wait for the images to finish loading.'
+      );
     });
   }
 

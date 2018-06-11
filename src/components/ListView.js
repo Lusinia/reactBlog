@@ -4,24 +4,22 @@ import PropTypes from 'prop-types';
 import { CENTER_STYLE, PADDING_MIXIN, TEXT_SIZE } from '../constants';
 import { COLORS } from '../constants/colors';
 
-const ListItemSettings = (props) => {
-  return (
-    <View style={styles.main}>
-      <Text style={[styles.text, { fontWeight: 'bold' }]}>{props.title}</Text>
-      {props.onPressButton ?
-        <TouchableHighlight
-          style={styles.button}
-          onPress={props.onPressButton}
-          underlayColor={COLORS.DARK_TRANSPARENT}
-          activeOpacity={90}
-        >
-          <Text style={styles.buttonText}>Ok</Text>
-        </TouchableHighlight> :
-        <Text style={styles.text}>{props.value}</Text>
-      }
-    </View>
-  );
-};
+const ListItemSettings = (props) => (
+  <View style={styles.main}>
+    <Text style={[styles.text, { fontWeight: 'bold' }]}>{props.title}</Text>
+    {props.onPressButton ?
+      <TouchableHighlight
+        style={styles.button}
+        onPress={props.onPressButton}
+        underlayColor={COLORS.DARK_TRANSPARENT}
+        activeOpacity={90}
+      >
+        <Text style={styles.buttonText}>Ok</Text>
+      </TouchableHighlight> :
+      <Text style={styles.text}>{props.value}</Text>
+    }
+  </View>
+);
 
 const styles = StyleSheet.create({
   main: {
@@ -56,6 +54,7 @@ ListItemSettings.propTypes = {
   onPressButton: PropTypes.func,
   title: PropTypes.string,
   value: PropTypes.string,
+  input: PropTypes.bool,
 };
 
 export default ListItemSettings;

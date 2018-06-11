@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import { AVARAT_SIZE, CENTER_STYLE, COLORS, LOADING, PADDING_MIXIN, TEXT_SIZE, TITLE_MIXIN } from '../constants';
+import { AVARAT_SIZE, CENTER_STYLE, COLORS, PADDING_MIXIN, PLACEHOLDER, TEXT_SIZE, TITLE_MIXIN } from '../constants';
 import Comments from './Comments';
 import { CachedImage } from 'react-native-cached-image';
 
@@ -14,14 +14,13 @@ const MessagePost = (props) => {
           <View style={styles.avatarWrapper}>
             <CachedImage
               source={{ uri: props.image }}
-              defaultSource={LOADING}
-              fallbackSource={LOADING}
+              defaultSource={PLACEHOLDER}
+              fallbackSource={PLACEHOLDER}
               style={{
-                width: 100,
-                height: 100
+                width: 70,
+                height: 70
               }}
             />
-
             <View style={styles.fixCircleClipping}/>
           </View>
         </View>

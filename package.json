@@ -9,13 +9,14 @@
     "lint": "./node_modules/.bin/eslint src --fix",
     "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
-    "build:ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/ultraf/main.jsbundle' --dev=true --platform='ios' --assets-dest='./ios'",
+    "build:ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/BlogPosts/main.jsbundle' --dev=true --platform='ios' --assets-dest='./ios'",
     "build:android": "chmod +x ./bin/run.sh && ./bin/run.sh",
     "server": "http-server -p 8000  ./public --cors"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "concurrently": "^3.5.1",
+    "cors": "^2.8.4",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-react": "^7.8.2",
@@ -32,6 +33,7 @@
     "react-native-segment-controller": "^1.0.0",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
+    "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "seamless-immutable": "^7.1.3"
   },

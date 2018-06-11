@@ -20,6 +20,7 @@ export const formatBytes = (bytes, decimals) => {
 };
 
 export const randomDate = () => {
-  return moment().unix() - Math.floor(Math.random()*1000000000);
+  return moment(moment().unix() - Math.floor(Math.random()*1000000000)).format('MMM DD, HH:hh');
 };
+
 

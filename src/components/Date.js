@@ -1,12 +1,11 @@
 import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import { TEXT_SIZE_SM, COLORS } from '../constants';
+import { COLORS, TEXT_SIZE_SM } from '../constants';
 
 const Date = (props) => (
   <View style={styles.main}>
-    <Text style={styles.text}>{moment(props.date).format('MMM DD, HH:hh')}</Text>
+    <Text style={styles.text}>{props.date}</Text>
   </View>
 );
 

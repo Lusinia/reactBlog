@@ -8,8 +8,17 @@ export const changedTab = (payload) => ({
   payload
 });
 
+export const error = (payload) => ({
+  type: types.ERROR,
+  payload
+});
+
 /* Dispatch the actionCreator */
 
 export const selectTab = (data) => dispatch => {
     dispatch(changedTab(data));
+};
+
+export const setError = (data) => dispatch => {
+  dispatch(error(data));
 };

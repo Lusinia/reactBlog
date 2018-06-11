@@ -16,6 +16,10 @@ const SideMenu = (props) => {
 
   return (
     <View style={styles.main}>
+      {props.userInfo &&
+      <View style={styles.bordered}>
+        <Text style={[styles.text, styles.name]}>{props.userInfo.name}</Text>
+      </View>}
       {TABS.map((item, index) => (
         <View key={item}>
           <TouchableHighlight
@@ -36,6 +40,7 @@ const SideMenu = (props) => {
 SideMenu.propTypes = {
   selectTab: PropTypes.func,
   navigator: PropTypes.object,
+  userInfo: PropTypes.object,
   fetchedData: PropTypes.array,
   selectedTab: PropTypes.number,
 };
@@ -57,11 +62,21 @@ const styles = StyleSheet.create({
   },
   active: {
     color: COLORS.CURIOUS_BLUE
+  },
+  name: {
+    color: COLORS.GOLDEN,
+    fontWeight: 'bold'
+  },
+  bordered: {
+    ...PADDING_MIXIN,
+    borderBottomWidth: 2,
+    borderBottomColor: COLORS.RAVEN
   }
 });
 
 const mapStateToProps = (state) => ({
-  selectedTab: state.root.selectedTab
+  selectedTab: state.root.selectedTab,
+  userInfo: state.user.userInfo
 });
 
 export default connect(mapStateToProps, { selectTab })(SideMenu);

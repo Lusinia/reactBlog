@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SegmentControl from 'react-native-segment-controller';
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { SectionList, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setData } from '../actions/fetchData';
@@ -31,11 +31,18 @@ class ShowList extends Component {
     this.state = {
       postsCount: [0, 0, 0],
       posts: [],
-      refreshing: false,
+      startLoadingPost: 0,
+      limitCacheSize: 10,
+      limitPosts: 3,
+      chunk: 7
     };
+    this.isLoaded = false;
+    this.onEndReached = false;
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     this.getPosts = this.getPosts.bind(this);
     this.getImages = this.getImages.bind(this);
+    this.onEndReachedTrigger = this.onEndReachedTrigger.bind(this);
+    this.onPreloadCompleteTrigger = this.onPreloadCompleteTrigger.bind(this);
   }
 
   async componentDidMount() {
@@ -67,28 +74,26 @@ class ShowList extends Component {
     return data ? data.filter(item => item.type !== PHOTO_POST) : [];
   }
 
-  getAllPosts(data) {
-    if (data) {
-      return data.map((item, index) => {
-        let post = null;
-        if (item.type === PHOTO_POST) {
-          post = <PhotoPost
-            userName={item.userName}
-            image={item.imageURL}
-            likes={item.likesCount}
-            comments={item.commentsCount}
-            date={`${randomDate()}`}
-          />;
-        } else {
-          post = <MessagePost
-            image={item.imageURL}
-            userName={item.userName}
-            message={item.message}
-            comments={item.commentsCount}
-          />;
-        }
-        return <View style={styles.postWrapper} key={index}>{post}</View>;
-      });
+  getOnePost({ item }) {
+    if (item) {
+      let post = null;
+      if (item.type === PHOTO_POST) {
+        post = <PhotoPost
+          userName={item.userName}
+          image={item.imageURL}
+          likes={item.likesCount}
+          comments={item.commentsCount}
+          date={randomDate()}
+        />;
+      } else {
+        post = <MessagePost
+          image={item.imageURL}
+          userName={item.userName}
+          message={item.message}
+          comments={item.commentsCount}
+        />;
+      }
+      return <View style={styles.postWrapper}>{post}</View>;
     }
   }
 
@@ -117,24 +122,43 @@ class ShowList extends Component {
   }
 
   getImages(data) {
-    return data.map(item => item.imageURL);
+    this.isLoaded = false;
+    return this.getPosts(data).map(item => item.imageURL);
   }
 
-  async deleteCacheURL() {
-    const images = this.getImages(this.props.fetchedData);
-    await Promise.all(images.map(async image => {
-      await defaultImageCacheManager.deleteUrl(image);
-    }))
-      .then((res) => {
-        defaultImageCacheManager.getCacheInfo()
-          .then(({ size, files }) => {
-            this.props.setCacheData({ size, files });
-            this.setState({ refreshing: false });
-            images.forEach(image => {
-              defaultImageCacheManager.downloadAndCacheUrl(image);
-            });
-          });
-      });
+  async onEndReachedTrigger() {
+    this.onEndReached = true;
+    const condition = this.isLoaded && this.props.fetchedData.length;
+    if (condition) {
+      const restPosts = this.props.fetchedData.length - this.state.limitPosts;
+      const postsToLoad = restPosts >= this.state.chunk ? this.state.chunk : restPosts;
+      await this.setState(prevState => ({
+          limitPosts: prevState.limitPosts + postsToLoad,
+          startLoadingPost: prevState.limitPosts
+        })
+      );
+      this.onEndReached = false;
+      this.isLoaded = false;
+    }
+  }
+
+  async onPreloadCompleteTrigger() {
+    if (this.onEndReached) {
+      this.isLoaded = false;
+      await Promise.all(this.props.fetchedData.slice(this.state.startLoadingPost, this.state.limitPosts)
+        .map(async (item) => {
+          await defaultImageCacheManager.downloadAndCacheUrl(item.imageURL);
+        })
+      );
+      this.isLoaded = true;
+
+    } else {
+      this.isLoaded = true;
+    }
+  }
+
+  getSections(data) {
+     return this.getPosts(data).slice(0, this.state.limitPosts).map(item => ({ data: [{ item }] }));
   }
 
   render() {
@@ -154,19 +178,24 @@ class ShowList extends Component {
         </View>
         <View>
           <ImageCacheProvider
-            urlsToPreload={this.getImages(this.getPosts(this.props.fetchedData))}
-            numberOfConcurrentPreloads={3}
+          urlsToPreload={this.getImages(this.props.fetchedData.slice(0, 3))}
+          numberOfConcurrentPreloads={this.state.chunk}
+          onPreloadComplete={this.onPreloadCompleteTrigger}
           >
-            <ScrollView
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={this.deleteCacheURL.bind(this)}
-                />
-              }
-            >
-              {this.getAllPosts(this.getPosts(this.props.fetchedData))}
-            </ScrollView>
+          <SectionList
+            renderItem={({ item }) => this.getOnePost(item)}
+            sections={this.getSections(this.props.fetchedData)}
+            keyExtractor={({ item }) => item._id}
+            extraData={this.state}
+            onEndReached={this.onEndReachedTrigger}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={() => {
+              return this.isLoaded && this.props.fetchedData.length ?
+                <Text style={styles.text}> Wait a moment...</Text> :
+                null;
+            }
+            }
+          />
           </ImageCacheProvider>
         </View>
       </View>
@@ -185,9 +214,11 @@ ShowList.propTypes = {
 
 const styles = StyleSheet.create({
   main: {
+    flex: 1,
     width: '100%',
     height: '100%',
-    backgroundColor: COLORS.WHITE
+    backgroundColor: COLORS.WHITE,
+    marginBottom: 30
   },
   postWrapper: {
     ...PADDING_MIXIN,
@@ -198,7 +229,8 @@ const styles = StyleSheet.create({
     ...MARGIN_MIXIN
   },
   text: {
-    color: 'black'
+    color: 'black',
+    marginBottom: 30
   }
 });
 
